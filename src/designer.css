@@ -1,0 +1,325 @@
+.oa-module-page h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: #1f1f1f;
+}
+
+.oa-module-page__desc {
+  margin: 0 0 20px;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+/* ═══════════════════════════════════
+   独立 SPA 布局（无侧边栏/顶部栏）
+   ═══════════════════════════════════ */
+.oa-designer-standalone {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  background: #f5f6f8;
+  overflow: hidden;
+}
+
+.oa-designer-standalone--scroll {
+  overflow-y: auto;
+}
+
+.oa-designer-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ═══════════════════════════════════
+   表单设计器主布局
+   ═══════════════════════════════════ */
+.oa-designer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+.oa-designer__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.oa-designer__autosave-hint {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.oa-designer__main {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* —— 左侧字段库 —— */
+.oa-designer__palette {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.oa-designer__panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.oa-designer__palette-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oa-designer__palette-item {
+  text-align: left !important;
+  cursor: grab;
+  user-select: none;
+}
+
+.oa-designer__palette-item:active {
+  cursor: grabbing;
+}
+
+.oa-designer__palette-tip {
+  margin: auto 0 0;
+  font-size: 12px;
+  color: #bfbfbf;
+}
+
+/* —— 中间画布 —— */
+.oa-designer__canvas {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.oa-designer__canvas-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.oa-designer__title-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f1f1f;
+  background: transparent;
+}
+
+.oa-designer__field-count {
+  font-size: 12px;
+  color: #8c8c8c;
+  flex-shrink: 0;
+}
+
+.oa-designer__canvas-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oa-designer__empty {
+  margin: auto;
+  color: #bfbfbf;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* —— 拖拽放置反馈 —— */
+.oa-designer__canvas-body.is-drag-over {
+  background: #f0f7ff;
+  outline: 2px dashed #69b1ff;
+  outline-offset: -4px;
+}
+
+.oa-designer__canvas-body.is-empty.is-drag-over .oa-designer__empty {
+  color: #1677ff;
+}
+
+.oa-designer__field-row.is-drop-target {
+  border-color: #69b1ff;
+}
+
+/* 插入位置指示线 */
+.oa-designer__drop-indicator {
+  height: 2px;
+  margin: 3px 0;
+  background: #1677ff;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
+  animation: oa-designer-drop-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes oa-designer-drop-pulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.oa-designer__field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 1px solid #eef0f3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.oa-designer__field-row:hover {
+  background: #fafafa;
+}
+
+.oa-designer__field-row.is-selected {
+  border-color: #1677ff;
+  background: #e6f0ff;
+}
+
+.oa-designer__field-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.oa-designer__field-label {
+  font-size: 14px;
+  color: #1f1f1f;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oa-designer__field-type {
+  font-size: 11px;
+  color: #8c8c8c;
+  background: #f5f5f5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.oa-designer__field-required {
+  font-size: 11px;
+  color: #ff4d4f;
+  flex-shrink: 0;
+}
+
+.oa-designer__field-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* —— 右侧属性面板 —— */
+.oa-designer__props {
+  width: 300px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.oa-designer__prop {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.oa-designer__prop--inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.oa-designer__prop label {
+  font-size: 12px;
+  color: #595959;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.oa-designer__options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.oa-designer__option-row {
+  display: flex;
+  gap: 6px;
+}
+
+.oa-designer__option-row .ant-input {
+  flex: 1;
+}
+
+/* —— 预览 —— */
+.oa-designer__preview {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* —— 列表页 / 页头 —— */
+.oa-designer__list-toolbar {
+  margin-bottom: 16px;
+}
+
+.oa-designer__page-head {
+  margin-bottom: 0;
+}
