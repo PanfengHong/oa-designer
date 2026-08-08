@@ -9,7 +9,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import type { FormSchema } from '@my-oa/form'
+import type { FormSchema } from '@zdy-oa/form'
 import { createForm, loadForms, removeForm, upsertForm, type StoredForm } from '../storage'
 
 function downloadFormJson(form: FormSchema): void {

@@ -3,7 +3,7 @@ import { useState as r } from "react";
 import { useNavigate as i, useParams as a } from "react-router-dom";
 import { App as o, Button as s, Input as c, Popconfirm as l, Select as u, Space as d, Switch as f, Table as p, Upload as m } from "antd";
 import { AlignLeftOutlined as h, ArrowDownOutlined as g, ArrowUpOutlined as _, CalendarOutlined as v, DeleteOutlined as y, DownloadOutlined as b, EditOutlined as x, EyeOutlined as S, FileTextOutlined as C, NumberOutlined as w, PlusOutlined as T, UnorderedListOutlined as E, UploadOutlined as D, UserOutlined as O } from "@ant-design/icons";
-import { FormRenderer as k, sampleLeaveFormSchema as A } from "@my-oa/form";
+import { FormRenderer as k, sampleLeaveFormSchema as A } from "@zdy-oa/form";
 //#region src/DesignerLayout.tsx
 function j({ children: e, scroll: n = !1 }) {
 	return /* @__PURE__ */ t("div", {

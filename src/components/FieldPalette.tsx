@@ -8,7 +8,7 @@ import {
   UnorderedListOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import type { FormFieldType } from '@my-oa/form'
+import type { FormFieldType } from '@zdy-oa/form'
 import { FIELD_TYPES } from '../fieldMeta'
 
 const ICONS: Record<FormFieldType, ReactNode> = {

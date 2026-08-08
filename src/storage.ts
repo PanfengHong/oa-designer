@@ -1,5 +1,5 @@
-import type { FormSchema } from '@my-oa/form'
-import { sampleLeaveFormSchema } from '@my-oa/form'
+import type { FormSchema } from '@zdy-oa/form'
+import { sampleLeaveFormSchema } from '@zdy-oa/form'
 
 /**
  * 表单设计器的本地持久化层。

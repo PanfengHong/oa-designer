@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@my-oa/form": ["../oa-form/src/index.ts"]
+      "@zdy-oa/form": ["../oa-form/src/index.ts"]
     },
 
     /* Linting */

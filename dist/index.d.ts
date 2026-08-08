@@ -1,4 +1,4 @@
-import { FormSchema } from '@my-oa/form';
+import { FormSchema } from '@zdy-oa/form';
 import { JSX } from 'react';
 import { ReactNode } from 'react';
 

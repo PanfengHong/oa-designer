@@ -1,6 +1,6 @@
 import { Button, Input, Select, Switch } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import type { FormFieldSchema, FormFieldType } from '@my-oa/form'
+import type { FormFieldSchema, FormFieldType } from '@zdy-oa/form'
 import { FIELD_TYPES } from '../fieldMeta'
 
 export interface PropertyPanelProps {

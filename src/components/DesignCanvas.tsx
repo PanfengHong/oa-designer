@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from 'antd'
 import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { FormSchema, FormFieldType } from '@my-oa/form'
+import type { FormSchema, FormFieldType } from '@zdy-oa/form'
 import { FIELD_TYPE_LABEL } from '../fieldMeta'
 import { FIELD_DRAG_MIME } from './FieldPalette'
 

@@ -1,4 +1,4 @@
-import type { FormFieldType } from '@my-oa/form'
+import type { FormFieldType } from '@zdy-oa/form'
 
 export interface FieldMeta {
   type: FormFieldType

@@ -24,7 +24,7 @@ export default defineConfig({
         'react-router-dom',
         'antd',
         '@ant-design/icons',
-        '@my-oa/form',
+        '@zdy-oa/form',
       ],
     },
   },
