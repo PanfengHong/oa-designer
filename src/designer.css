@@ -17,7 +17,6 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 16px 20px;
   box-sizing: border-box;
   background: #f5f6f8;
   overflow: hidden;
@@ -41,19 +40,16 @@
 .oa-designer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   flex: 1;
   min-height: 0;
 }
 
-.oa-designer__toolbar {
+.oa-designer__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
   background: #fff;
-  border: 1px solid #eef0f3;
-  border-radius: 12px;
   flex-shrink: 0;
 }
 
@@ -65,17 +61,15 @@
 .oa-designer__main {
   flex: 1;
   display: flex;
-  gap: 12px;
   min-height: 0;
 }
 
 /* —— 左侧字段库 —— */
 .oa-designer__palette {
-  width: 200px;
+  width: 300px;
   flex-shrink: 0;
   background: #fff;
   border: 1px solid #eef0f3;
-  border-radius: 12px;
   padding: 14px;
   display: flex;
   flex-direction: column;
@@ -115,12 +109,18 @@
 .oa-designer__canvas {
   flex: 1;
   min-width: 0;
-  background: #fff;
   border: 1px solid #eef0f3;
-  border-radius: 12px;
   display: flex;
+  padding: 12px;
   flex-direction: column;
   overflow: hidden;
+}
+
+.oa-designer__canvas-wrapper {
+  background-color: #fff;
+  height: 100%;
+  overflow-y: auto;
+  border-radius: 12px;
 }
 
 .oa-designer__canvas-head {
@@ -262,7 +262,6 @@
   flex-shrink: 0;
   background: #fff;
   border: 1px solid #eef0f3;
-  border-radius: 12px;
   padding: 14px;
   display: flex;
   flex-direction: column;

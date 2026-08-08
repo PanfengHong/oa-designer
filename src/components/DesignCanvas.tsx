@@ -57,90 +57,90 @@ export function DesignCanvas({
 
   return (
     <div className="oa-designer__canvas">
-      <div className="oa-designer__canvas-head">
-        <input
-          className="oa-designer__title-input"
-          value={schema.title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          placeholder="表单标题"
-        />
-        <span className="oa-designer__field-count">{schema.fields.length} 个字段</span>
-      </div>
-      <div
-        className={`oa-designer__canvas-body${dropIndex !== null ? ' is-drag-over' : ''}${
-          schema.fields.length === 0 ? ' is-empty' : ''
-        }`}
-        onDragOver={(e) => {
-          if (!isFieldDrag(e)) return
-          e.preventDefault()
-          e.dataTransfer.dropEffect = 'copy'
-          // 拖到空白区域：追加到末尾
-          if (dropIndex !== schema.fields.length) setDropIndex(schema.fields.length)
-        }}
-        onDragLeave={(e) => {
-          // 离开画布主体时清除指示（仅当真正离开，而非进入子元素）
-          const related = e.relatedTarget as Node | null
-          if (!e.currentTarget.contains(related)) {
-            setDropIndex(null)
-          }
-        }}
-        onDrop={(e) => handleDrop(e, undefined)}
-      >
-        {schema.fields.length === 0 ? (
-          <div className="oa-designer__empty">
-            {dropIndex !== null ? '松开以添加该字段' : '从左侧字段库拖拽或点击添加字段'}
-          </div>
-        ) : (
-          schema.fields.map((field, idx) => (
-            <div key={field.id}>
-              {dropIndex === idx && <div className="oa-designer__drop-indicator" />}
-              <div
-                className={`oa-designer__field-row${
-                  selectedId === field.id ? ' is-selected' : ''
-                }${dropIndex === idx || dropIndex === idx + 1 ? ' is-drop-target' : ''}`}
-                onClick={() => onSelect(field.id)}
-                onDragOver={(e) => {
-                  if (!isFieldDrag(e)) return
-                  e.preventDefault()
-                  e.stopPropagation()
-                  e.dataTransfer.dropEffect = 'copy'
-                  const next = computeDropIndex(e, idx)
-                  if (next !== dropIndex) setDropIndex(next)
-                }}
-                onDrop={(e) => handleDrop(e, computeDropIndex(e, idx))}
-              >
-                <div className="oa-designer__field-info">
-                  <span className="oa-designer__field-label">{field.label || '(未命名)'}</span>
-                  <span className="oa-designer__field-type">{FIELD_TYPE_LABEL[field.type]}</span>
-                  {field.required ? <span className="oa-designer__field-required">必填</span> : null}
-                </div>
-                <div className="oa-designer__field-actions" onClick={(e) => e.stopPropagation()}>
-                  <Button
-                    size="small"
-                    disabled={idx === 0}
-                    onClick={() => onMove(field.id, 'up')}
-                    icon={<ArrowUpOutlined />}
-                  />
-                  <Button
-                    size="small"
-                    disabled={idx === schema.fields.length - 1}
-                    onClick={() => onMove(field.id, 'down')}
-                    icon={<ArrowDownOutlined />}
-                  />
-                  <Button
-                    size="small"
-                    danger
-                    onClick={() => onRemove(field.id)}
-                    icon={<DeleteOutlined />}
-                  />
-                </div>
-              </div>
-              {idx === schema.fields.length - 1 && dropIndex === idx + 1 && (
-                <div className="oa-designer__drop-indicator" />
-              )}
+      <div className='oa-designer__canvas-wrapper'>
+        <div className="oa-designer__canvas-head">
+          <input
+            className="oa-designer__title-input"
+            value={schema.title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            placeholder="表单标题"
+          />
+          <span className="oa-designer__field-count">{schema.fields.length} 个字段</span>
+        </div>
+        <div
+          className={`oa-designer__canvas-body${dropIndex !== null ? ' is-drag-over' : ''}${schema.fields.length === 0 ? ' is-empty' : ''
+            }`}
+          onDragOver={(e) => {
+            if (!isFieldDrag(e)) return
+            e.preventDefault()
+            e.dataTransfer.dropEffect = 'copy'
+            // 拖到空白区域：追加到末尾
+            if (dropIndex !== schema.fields.length) setDropIndex(schema.fields.length)
+          }}
+          onDragLeave={(e) => {
+            // 离开画布主体时清除指示（仅当真正离开，而非进入子元素）
+            const related = e.relatedTarget as Node | null
+            if (!e.currentTarget.contains(related)) {
+              setDropIndex(null)
+            }
+          }}
+          onDrop={(e) => handleDrop(e, undefined)}
+        >
+          {schema.fields.length === 0 ? (
+            <div className="oa-designer__empty">
+              {dropIndex !== null ? '松开以添加该字段' : '从左侧字段库拖拽或点击添加字段'}
             </div>
-          ))
-        )}
+          ) : (
+            schema.fields.map((field, idx) => (
+              <div key={field.id}>
+                {dropIndex === idx && <div className="oa-designer__drop-indicator" />}
+                <div
+                  className={`oa-designer__field-row${selectedId === field.id ? ' is-selected' : ''
+                    }${dropIndex === idx || dropIndex === idx + 1 ? ' is-drop-target' : ''}`}
+                  onClick={() => onSelect(field.id)}
+                  onDragOver={(e) => {
+                    if (!isFieldDrag(e)) return
+                    e.preventDefault()
+                    e.stopPropagation()
+                    e.dataTransfer.dropEffect = 'copy'
+                    const next = computeDropIndex(e, idx)
+                    if (next !== dropIndex) setDropIndex(next)
+                  }}
+                  onDrop={(e) => handleDrop(e, computeDropIndex(e, idx))}
+                >
+                  <div className="oa-designer__field-info">
+                    <span className="oa-designer__field-label">{field.label || '(未命名)'}</span>
+                    <span className="oa-designer__field-type">{FIELD_TYPE_LABEL[field.type]}</span>
+                    {field.required ? <span className="oa-designer__field-required">必填</span> : null}
+                  </div>
+                  <div className="oa-designer__field-actions" onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      size="small"
+                      disabled={idx === 0}
+                      onClick={() => onMove(field.id, 'up')}
+                      icon={<ArrowUpOutlined />}
+                    />
+                    <Button
+                      size="small"
+                      disabled={idx === schema.fields.length - 1}
+                      onClick={() => onMove(field.id, 'down')}
+                      icon={<ArrowDownOutlined />}
+                    />
+                    <Button
+                      size="small"
+                      danger
+                      onClick={() => onRemove(field.id)}
+                      icon={<DeleteOutlined />}
+                    />
+                  </div>
+                </div>
+                {idx === schema.fields.length - 1 && dropIndex === idx + 1 && (
+                  <div className="oa-designer__drop-indicator" />
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   )

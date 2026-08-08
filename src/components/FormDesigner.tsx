@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Space } from 'antd'
-import { EyeOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icons'
+import { EyeOutlined, EditOutlined, DownloadOutlined, SaveOutlined } from '@ant-design/icons'
 import type { FormFieldSchema, FormFieldType, FormSchema } from '@my-oa/form'
 import { FormRenderer } from '@my-oa/form'
 import { FieldPalette } from './FieldPalette'
@@ -81,18 +81,20 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
 
   return (
     <div className="oa-designer">
-      <div className="oa-designer__toolbar">
-        <span className="oa-designer__autosave-hint">改动自动保存到本地</span>
+      <div className="oa-designer__header">
+        <span className="oa-designer__logo">表单设计器</span>
         <Space>
           <Button icon={<DownloadOutlined />} onClick={handleExport}>
             导出 JSON
           </Button>
           <Button
-            type={preview ? 'default' : 'primary'}
             icon={preview ? <EditOutlined /> : <EyeOutlined />}
             onClick={() => setPreview((p) => !p)}
           >
             {preview ? '返回编辑' : '预览'}
+          </Button>
+          <Button icon={<SaveOutlined />} type='primary'>
+           保存
           </Button>
         </Space>
       </div>
