@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { App as AntApp, Button, Popconfirm, Space, Table, Upload } from 'antd'
 import type { TableColumnsType } from 'antd'
 import {
@@ -67,14 +67,15 @@ function FormListInner() {
       width: 230,
       render: (_, r) => (
         <Space>
-          <Button
+          <Link to={`/designer/${r.id}`} target="_blank">
+            <Button
             size="small"
             type="link"
             icon={<EditOutlined />}
-            onClick={() => navigate(`/designer/${r.id}`)}
           >
             编辑
           </Button>
+          </Link>
           <Button size="small" type="link" icon={<DownloadOutlined />} onClick={() => downloadFormJson(r)}>
             导出
           </Button>
