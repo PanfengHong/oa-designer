@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     dts({ rollupTypes: true, tsconfigPath: './tsconfig.build.json' }),
   ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@zdy-oa/utils': resolve(__dirname, '../oa-utils/src/index.ts'),
+    },
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

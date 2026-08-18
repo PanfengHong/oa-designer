@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import { Button } from 'antd'
 import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { FormSchema, FormFieldType } from '@zdy-oa/form'
+import type { FieldType, LayoutSchema } from '../types'
 import { FIELD_TYPE_LABEL } from '../fieldMeta'
 import { FIELD_DRAG_MIME } from './FieldPalette'
 
 export interface DesignCanvasProps {
-  schema: FormSchema
+  schema: LayoutSchema
   selectedId: string | null
   onSelect: (id: string) => void
   onMove: (id: string, dir: 'up' | 'down') => void
   onRemove: (id: string) => void
-  onTitleChange: (title: string) => void
+  onNameChange: (name: string) => void
   /** 拖拽或点击添加字段，index 为插入位置（省略则追加到末尾） */
-  onAdd: (type: FormFieldType, index?: number) => void
+  onAdd: (type: FieldType, index?: number) => void
 }
 
 export function DesignCanvas({
@@ -22,15 +22,15 @@ export function DesignCanvas({
   onSelect,
   onMove,
   onRemove,
-  onTitleChange,
+  onNameChange,
   onAdd,
 }: DesignCanvasProps) {
   // 拖拽过程中预览的插入位置：null 表示未在画布内拖拽；数字表示将插入到该索引之前
   const [dropIndex, setDropIndex] = useState<number | null>(null)
 
-  const readFieldType = (e: React.DragEvent): FormFieldType | null => {
+  const readFieldType = (e: React.DragEvent): FieldType | null => {
     const type = e.dataTransfer.getData(FIELD_DRAG_MIME) || e.dataTransfer.getData('text/plain')
-    return (type as FormFieldType) || null
+    return (type as FieldType) || null
   }
 
   const isFieldDrag = (e: React.DragEvent): boolean => {
@@ -61,11 +61,11 @@ export function DesignCanvas({
         <div className="oa-designer__canvas-head">
           <input
             className="oa-designer__title-input"
-            value={schema.title}
-            onChange={(e) => onTitleChange(e.target.value)}
-            placeholder="表单标题"
+            value={schema.name}
+            onChange={(e) => onNameChange(e.target.value)}
+            placeholder="布局名称（可作为页面标题）"
           />
-          <span className="oa-designer__field-count">{schema.fields.length} 个字段</span>
+          <span className="oa-designer__field-count">{schema.fields.length} 个字段 · {schema.type}</span>
         </div>
         <div
           className={`oa-designer__canvas-body${dropIndex !== null ? ' is-drag-over' : ''}${schema.fields.length === 0 ? ' is-empty' : ''
@@ -109,8 +109,10 @@ export function DesignCanvas({
                   onDrop={(e) => handleDrop(e, computeDropIndex(e, idx))}
                 >
                   <div className="oa-designer__field-info">
-                    <span className="oa-designer__field-label">{field.label || '(未命名)'}</span>
-                    <span className="oa-designer__field-type">{FIELD_TYPE_LABEL[field.type]}</span>
+                    <span className="oa-designer__field-label">
+                      {field.label || '(未命名)'}
+                      <small style={{ marginLeft: 6, color: '#999' }}>[{FIELD_TYPE_LABEL[field.type] ?? field.type}]</small>
+                    </span>
                     {field.required ? <span className="oa-designer__field-required">必填</span> : null}
                   </div>
                   <div className="oa-designer__field-actions" onClick={(e) => e.stopPropagation()}>

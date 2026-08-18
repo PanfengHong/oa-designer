@@ -1,35 +1,39 @@
 import { useState } from 'react'
 import { Button, Space } from 'antd'
 import { EyeOutlined, EditOutlined, DownloadOutlined, SaveOutlined } from '@ant-design/icons'
-import type { FormFieldSchema, FormFieldType, FormSchema } from '@zdy-oa/form'
 import { FormRenderer } from '@zdy-oa/form'
 import { FieldPalette } from './FieldPalette'
 import { DesignCanvas } from './DesignCanvas'
 import { PropertyPanel } from './PropertyPanel'
 import { defaultLabelFor, genFieldId } from '../fieldMeta'
+import type { FieldSchema, FieldType, LayoutSchema } from '../types/index'
 
-export interface FormDesignerProps {
-  schema: FormSchema
-  onChange?: (schema: FormSchema) => void
+export interface DesignerProps {
+  schema: LayoutSchema
+  onChange?: (schema: LayoutSchema) => void
 }
 
-export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerProps) {
-  const [schema, setSchema] = useState<FormSchema>(initialSchema)
+export function Designer({ schema: initialSchema, onChange }: DesignerProps) {
+  const [schema, setSchema] = useState<LayoutSchema>(initialSchema)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [preview, setPreview] = useState(false)
 
-  const update = (next: FormSchema) => {
+  const update = (next: LayoutSchema) => {
     setSchema(next)
     onChange?.(next)
   }
 
-  const addField = (type: FormFieldType, index?: number) => {
-    const field: FormFieldSchema = {
+  const addField = (type: FieldType, index?: number) => {
+    const field: FieldSchema = {
       id: genFieldId(),
       type,
       label: defaultLabelFor(type),
       required: false,
-      ...(type === 'select' ? { options: [{ label: '', value: '' }] } : {}),
+      ...(type === 'select' || type === 'radio' || type === 'checkbox'
+        ? { options: [{ label: '', value: '' }] }
+        : {}),
+      ...(type === 'heading' ? { content: defaultLabelFor(type) } : {}),
+      ...(type === 'paragraph' ? { content: '' } : {}),
     }
     const fields = [...schema.fields]
     if (index === undefined || index >= fields.length) {
@@ -43,7 +47,7 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
     setSelectedId(field.id)
   }
 
-  const updateField = (id: string, patch: Partial<FormFieldSchema>) => {
+  const updateField = (id: string, patch: Partial<FieldSchema>) => {
     update({
       ...schema,
       fields: schema.fields.map((f) => (f.id === id ? { ...f, ...patch } : f)),
@@ -72,9 +76,13 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${schema.id || 'form'}.json`
+    a.download = `${schema.id || 'layout'}.json`
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const handleSave = () => {
+    
   }
 
   const selected = schema.fields.find((f) => f.id === selectedId) ?? null
@@ -82,7 +90,7 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
   return (
     <div className="oa-designer">
       <div className="oa-designer__header">
-        <span className="oa-designer__logo">表单设计器</span>
+        <span className="oa-designer__logo">页面设计器</span>
         <Space>
           <Button icon={<DownloadOutlined />} onClick={handleExport}>
             导出 JSON
@@ -93,15 +101,15 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
           >
             {preview ? '返回编辑' : '预览'}
           </Button>
-          <Button icon={<SaveOutlined />} type='primary'>
-           保存
+          <Button icon={<SaveOutlined />} type='primary' onClick={handleSave}>
+            保存
           </Button>
         </Space>
       </div>
       <div className="oa-designer__main">
         {preview ? (
           <div className="oa-designer__preview">
-            <FormRenderer schema={schema} />
+            <FormRenderer schema={{ layout: schema }} />
           </div>
         ) : (
           <>
@@ -113,7 +121,7 @@ export function FormDesigner({ schema: initialSchema, onChange }: FormDesignerPr
               onMove={moveField}
               onRemove={removeField}
               onAdd={addField}
-              onTitleChange={(title) => update({ ...schema, title })}
+              onNameChange={(name) => update({ ...schema, name })}
             />
             <PropertyPanel
               field={selected}

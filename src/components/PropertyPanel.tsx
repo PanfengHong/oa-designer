@@ -1,11 +1,11 @@
-import { Button, Input, Select, Switch } from 'antd'
+import { Button, Input, InputNumber, Select, Switch } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import type { FormFieldSchema, FormFieldType } from '@zdy-oa/form'
-import { FIELD_TYPES } from '../fieldMeta'
+import type { FieldSchema, FieldType } from '../types'
+import { FIELD_TYPES, isInputField } from '../fieldMeta'
 
 export interface PropertyPanelProps {
-  field: FormFieldSchema | null
-  onChange: (patch: Partial<FormFieldSchema>) => void
+  field: FieldSchema | null
+  onChange: (patch: Partial<FieldSchema>) => void
 }
 
 export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
@@ -17,7 +17,7 @@ export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
       ) : (
         <>
           <div className="oa-designer__prop">
-            <label>标签</label>
+            <label>标签/标题</label>
             <Input
               value={field.label}
               onChange={(e) => onChange({ label: e.target.value })}
@@ -32,26 +32,32 @@ export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
             <label>类型</label>
             <Select
               value={field.type}
-              onChange={(v: FormFieldType) => onChange({ type: v })}
+              onChange={(v: FieldType) => onChange({ type: v })}
               options={FIELD_TYPES.map((f) => ({ value: f.type, label: f.label }))}
               style={{ width: '100%' }}
             />
           </div>
-          <div className="oa-designer__prop oa-designer__prop--inline">
-            <label>必填</label>
-            <Switch checked={!!field.required} onChange={(v) => onChange({ required: v })} />
-          </div>
-          {field.type !== 'user-picker' ? (
-            <div className="oa-designer__prop">
-              <label>占位提示</label>
-              <Input
-                value={field.placeholder ?? ''}
-                onChange={(e) => onChange({ placeholder: e.target.value })}
-                placeholder="placeholder"
-              />
-            </div>
+
+          {/* ========== 输入类字段通用属性 ========== */}
+          {isInputField(field.type) ? (
+            <>
+              <div className="oa-designer__prop oa-designer__prop--inline">
+                <label>必填</label>
+                <Switch checked={!!field.required} onChange={(v) => onChange({ required: v })} />
+              </div>
+              <div className="oa-designer__prop">
+                <label>占位提示</label>
+                <Input
+                  value={field.placeholder ?? ''}
+                  onChange={(e) => onChange({ placeholder: e.target.value })}
+                  placeholder="placeholder"
+                />
+              </div>
+            </>
           ) : null}
-          {field.type === 'select' ? (
+
+          {/* ========== 选择类字段：选项 ========== */}
+          {field.type === 'select' || field.type === 'radio' || field.type === 'checkbox' ? (
             <div className="oa-designer__prop">
               <label>
                 选项
@@ -104,6 +110,41 @@ export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
               </div>
             </div>
           ) : null}
+
+          {/* ========== 展示类字段：内容 ========== */}
+          {field.type === 'heading' || field.type === 'paragraph' || field.type === 'image' ? (
+            <div className="oa-designer__prop">
+              <label>
+                {field.type === 'heading' ? '标题文本' : field.type === 'paragraph' ? '段落文本' : '图片地址'}
+              </label>
+              {field.type === 'paragraph' ? (
+                <Input.TextArea
+                  value={field.content ?? ''}
+                  onChange={(e) => onChange({ content: e.target.value })}
+                  rows={4}
+                  placeholder={field.type === 'paragraph' ? '段落内容...' : '图片 URL'}
+                />
+              ) : (
+                <Input
+                  value={field.content ?? ''}
+                  onChange={(e) => onChange({ content: e.target.value })}
+                  placeholder={field.type === 'heading' ? '标题文本' : 'https://...'}
+                />
+              )}
+            </div>
+          ) : null}
+
+          {/* ========== 栅格/自由布局属性 ========== */}
+          <div className="oa-designer__prop oa-designer__prop--inline">
+            <label>跨列数 (grid)</label>
+            <InputNumber
+              min={1}
+              max={12}
+              value={field.colSpan}
+              onChange={(v) => onChange({ colSpan: typeof v === 'number' ? v : undefined })}
+              style={{ width: 120 }}
+            />
+          </div>
         </>
       )}
     </div>

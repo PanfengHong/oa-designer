@@ -312,6 +312,11 @@
   border-radius: 12px;
   padding: 24px;
   overflow-y: auto;
+
+  .oa-form {
+    margin: 0 auto;
+  }
+
 }
 
 /* —— 列表页 / 页头 —— */
