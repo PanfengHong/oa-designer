@@ -4,14 +4,30 @@ import { Designer } from '../components/Designer'
 import { DesignerLayout } from '../DesignerLayout'
 import { upsertLayout } from '../storage'
 import { useEffect, useState } from 'react'
-import { getFormDetail } from '../api'
+import { getFormDetail, updateForm } from '../api'
 import type { LayoutSchema } from '../types/index'
+import { message } from 'antd'
+
+
 
 export function DesignerPage() {
   const { formId } = useParams()
+  const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState<boolean>(true);
   const [schema, setSchema] = useState<LayoutSchema>()
    const navigate = useNavigate()
+
+   const handleSave = (schema: LayoutSchema) => {
+    updateForm(formId || '', { layout: schema }).then((res) => {
+      console.log(res);
+      if (res.code === 200) {
+        messageApi.open({
+          content: '保存成功',
+          type: 'success',
+        })
+      }
+    })
+   }
 
   useEffect(() => {
     console.log('formId', formId)
@@ -56,8 +72,11 @@ export function DesignerPage() {
   }
 
   return (
-    <DesignerLayout>
-      <Designer key={formId} schema={schema} onChange={(s) => upsertLayout(s)} />
+    <>
+      {contextHolder}
+      <DesignerLayout>
+      <Designer formId={formId} schema={schema} onChange={(s) => upsertLayout(s)} onSave={handleSave} />
     </DesignerLayout>
+    </>
   )
 }

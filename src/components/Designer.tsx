@@ -9,11 +9,13 @@ import { defaultLabelFor, genFieldId } from '../fieldMeta'
 import type { FieldSchema, FieldType, LayoutSchema } from '../types/index'
 
 export interface DesignerProps {
+  formId: string
   schema: LayoutSchema
   onChange?: (schema: LayoutSchema) => void
+  onSave?: (schema: LayoutSchema) => void
 }
 
-export function Designer({ schema: initialSchema, onChange }: DesignerProps) {
+export function Designer({ formId, schema: initialSchema, onChange, onSave }: DesignerProps) {
   const [schema, setSchema] = useState<LayoutSchema>(initialSchema)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [preview, setPreview] = useState(false)
@@ -82,7 +84,7 @@ export function Designer({ schema: initialSchema, onChange }: DesignerProps) {
   }
 
   const handleSave = () => {
-    
+    onSave?.(schema);
   }
 
   const selected = schema.fields.find((f) => f.id === selectedId) ?? null
@@ -109,7 +111,15 @@ export function Designer({ schema: initialSchema, onChange }: DesignerProps) {
       <div className="oa-designer__main">
         {preview ? (
           <div className="oa-designer__preview">
-            <FormRenderer schema={{ layout: schema }} />
+            <FormRenderer
+              schema={{
+                id: schema.id,
+                name: schema.name,
+                layout: schema,
+                createdAt: Date.now().toString(),
+                updatedAt: Date.now().toString(),
+              }}
+            />
           </div>
         ) : (
           <>

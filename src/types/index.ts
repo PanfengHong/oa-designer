@@ -1,41 +1,41 @@
 /**
  * 页面设计器维护的核心类型契约
  *
- * - LayoutSchema / FieldSchema / FieldType / LayoutType 由 designer 定义和维护
- *   └ 不再限定于"表单"——designer 可搭建任意页面类型的布局（数据采集页 / 审批详情页 / 信息展示页等）
- * - oa-form 通过 `import type` 引用（编译后擦除，运行时 form 不依赖 designer）
- * - designer 仍依赖 form 的运行时组件 FormRenderer（用于数据采集类布局的预览），单向依赖
+ * - LayoutSchema / FieldSchema / FieldType / LayoutType / Widget* 由 designer 定义和维护
+ * - oa-form 通过 `import type` 引用类型（编译后擦除），并实现 Widget 组件库
+ * - designer 运行时依赖 form 的 Widget registry（获取组件列表 + DesignView + ConfigView）
+ * - form 的 FormRenderer 运行时也用同一 registry 查找 RuntimeView
  */
+
+import type { ReactNode, ComponentType } from 'react'
 
 // ---------------------------------------------------------------------------
 // 布局模式：描述页面整体的排版方式
 // ---------------------------------------------------------------------------
 export type LayoutType =
-  | 'flow'      // 流式布局：从上到下依次排列（最常用，取代之前的 standard）
+  | 'flow'      // 流式布局：从上到下依次排列（最常用）
   | 'grid'      // 栅格布局：多列栅格（2/3/4 列）
   | 'table'     // 表格式布局：行列结构
   | 'free'      // 自由布局：可绝对定位 / 拖拽定位
 
 // ---------------------------------------------------------------------------
 // 字段类型：设计器可添加的各种"组件"
-//   - 输入采集类：text / textarea / number / date / date-range / select / user-picker / radio / checkbox / upload
-//   - 信息展示类：heading / paragraph / divider / image
 // ---------------------------------------------------------------------------
 export type FieldType =
-  | 'text'         // 单行文本输入
-  | 'textarea'     // 多行文本输入
-  | 'number'       // 数字输入
-  | 'date'         // 日期选择
-  | 'date-range'   // 日期范围
-  | 'select'       // 下拉选择
-  | 'user-picker'  // 人员选择
-  | 'radio'        // 单选按钮
-  | 'checkbox'     // 多选复选框
-  | 'upload'       // 文件上传
-  | 'heading'      // 标题（展示）
-  | 'paragraph'    // 段落（展示）
-  | 'divider'      // 分隔线（展示）
-  | 'image'        // 图片（展示）
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'date'
+  | 'date-range'
+  | 'select'
+  | 'user-picker'
+  | 'radio'
+  | 'checkbox'
+  | 'upload'
+  | 'heading'
+  | 'paragraph'
+  | 'divider'
+  | 'image'
 
 // ---------------------------------------------------------------------------
 // 通用选项（select/radio/checkbox 共用）
@@ -47,9 +47,6 @@ export interface FieldOption {
 
 // ---------------------------------------------------------------------------
 // 字段 Schema：设计器中每个组件的抽象描述
-//   - 所有字段共享：id / type / label
-//   - 输入类字段可选：required / placeholder / options / defaultValue
-//   - 展示类字段可选：content（段落文本/标题文本/图片地址 等）
 // ---------------------------------------------------------------------------
 export interface FieldSchema {
   id: string
@@ -61,25 +58,78 @@ export interface FieldSchema {
   options?: FieldOption[]
   defaultValue?: string | number | string[] | number[]
   // 展示类字段
-  content?: string    // heading: 标题文本 / paragraph: 段落文本 / image: 图片 URL
+  content?: string
   // 栅格 / 布局相关
-  colSpan?: number    // grid 模式下跨列数
-  width?: number      // free 模式下宽度 (px)
-  height?: number     // free 模式下高度 (px)
+  colSpan?: number
+  width?: number
+  height?: number
 }
 
 // ---------------------------------------------------------------------------
 // 布局 Schema（designer 的核心产物）
-//   - id:     布局 ID
-//   - name:   布局名（可作为页面标题）
-//   - type:   布局模式（flow/grid/table/free）
-//   - fields: 字段列表
-//   - columns: grid 模式下的列数
 // ---------------------------------------------------------------------------
 export interface LayoutSchema {
   id: string
   name: string
   type: LayoutType
   fields: FieldSchema[]
-  columns?: number     // grid 模式下的列数，默认 2
+  columns?: number
+}
+
+// ===========================================================================
+// Widget 三视图标准（由 designer 定义，由 oa-form 实现）
+// ===========================================================================
+
+/**
+ * 运行视图 Props
+ * 实际填写表单时的视图（FormRenderer 使用）
+ */
+export interface WidgetRuntimeProps {
+  field: FieldSchema
+  value?: string | number | (string | number)[] | undefined
+  onChange?: (value: string | number | (string | number)[]) => void
+  readOnly?: boolean
+}
+
+/**
+ * 设计视图 Props
+ * 设计器画布中展示的视图（DesignCanvas 使用）
+ * 通常是不可交互的预览态
+ */
+export interface WidgetDesignProps {
+  field: FieldSchema
+  selected?: boolean
+}
+
+/**
+ * 配置视图 Props
+ * 设计器右侧属性面板的视图（PropertyPanel 使用）
+ * 负责编辑该字段的属性
+ */
+export interface WidgetConfigProps {
+  field: FieldSchema
+  onChange: (patch: Partial<FieldSchema>) => void
+}
+
+/**
+ * Widget 定义：一个字段类型的完整三视图
+ *
+ * - type:        字段类型
+ * - label:       显示名（字段库中展示）
+ * - category:    分类（input 输入采集 / display 信息展示）
+ * - icon:        字段库图标
+ * - RuntimeView: 运行视图组件（实际填写时）
+ * - DesignView:  设计视图组件（设计器画布中）
+ * - ConfigView:  配置视图组件（右侧属性面板）
+ *
+ * 这套标准由 oa-designer 定义，oa-form 实现具体组件并注册到 registry
+ */
+export interface WidgetDefinition {
+  type: FieldType
+  label: string
+  category: 'input' | 'display'
+  icon?: ReactNode
+  RuntimeView: ComponentType<WidgetRuntimeProps>
+  DesignView: ComponentType<WidgetDesignProps>
+  ConfigView: ComponentType<WidgetConfigProps>
 }

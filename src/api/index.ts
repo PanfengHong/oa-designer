@@ -6,3 +6,11 @@ export const getFormDetail = (id: string) => {
         method: 'GET'
     });
 };
+
+export const updateForm = (id: string, data: any) => {
+    return request.request({
+        url: `/api/form/update/${id}`,
+        method: 'PATCH',
+        data
+    });
+};

@@ -5,6 +5,10 @@ export type {
   FieldOption,
   LayoutSchema,
   LayoutType,
+  WidgetDefinition,
+  WidgetRuntimeProps,
+  WidgetDesignProps,
+  WidgetConfigProps,
 } from './types'
 
 // 组件
