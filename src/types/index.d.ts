@@ -1,0 +1,85 @@
+/**
+ * 页面设计器维护的核心类型契约
+ *
+ * - LayoutSchema / FieldSchema / FieldType / LayoutType / Widget* 由 designer 定义和维护
+ * - oa-form 通过 `import type` 引用类型（编译后擦除），并实现 Widget 组件库
+ * - designer 运行时依赖 form 的 Widget registry（获取组件列表 + DesignView + ConfigView）
+ * - form 的 FormRenderer 运行时也用同一 registry 查找 RuntimeView
+ */
+import type { ReactNode, ComponentType } from 'react';
+export type LayoutType = 'flow' | 'grid' | 'table' | 'free';
+export type FieldType = 'text' | 'textarea' | 'number' | 'date' | 'date-range' | 'select' | 'user-picker' | 'radio' | 'checkbox' | 'upload' | 'heading' | 'paragraph' | 'divider' | 'image';
+export interface FieldOption {
+    label: string;
+    value: string;
+}
+export interface FieldSchema {
+    id: string;
+    type: FieldType;
+    label: string;
+    required?: boolean;
+    placeholder?: string;
+    options?: FieldOption[];
+    defaultValue?: string | number | string[] | number[];
+    content?: string;
+    colSpan?: number;
+    width?: number;
+    height?: number;
+}
+export interface LayoutSchema {
+    id: string;
+    name: string;
+    type: LayoutType;
+    fields: FieldSchema[];
+    columns?: number;
+}
+/**
+ * 运行视图 Props
+ * 实际填写表单时的视图（FormRenderer 使用）
+ */
+export interface WidgetRuntimeProps {
+    field: FieldSchema;
+    value?: string | number | (string | number)[] | undefined;
+    onChange?: (value: string | number | (string | number)[]) => void;
+    readOnly?: boolean;
+}
+/**
+ * 设计视图 Props
+ * 设计器画布中展示的视图（DesignCanvas 使用）
+ * 通常是不可交互的预览态
+ */
+export interface WidgetDesignProps {
+    field: FieldSchema;
+    selected?: boolean;
+}
+/**
+ * 配置视图 Props
+ * 设计器右侧属性面板的视图（PropertyPanel 使用）
+ * 负责编辑该字段的属性
+ */
+export interface WidgetConfigProps {
+    field: FieldSchema;
+    onChange: (patch: Partial<FieldSchema>) => void;
+}
+/**
+ * Widget 定义：一个字段类型的完整三视图
+ *
+ * - type:        字段类型
+ * - label:       显示名（字段库中展示）
+ * - category:    分类（input 输入采集 / display 信息展示）
+ * - icon:        字段库图标
+ * - RuntimeView: 运行视图组件（实际填写时）
+ * - DesignView:  设计视图组件（设计器画布中）
+ * - ConfigView:  配置视图组件（右侧属性面板）
+ *
+ * 这套标准由 oa-designer 定义，oa-form 实现具体组件并注册到 registry
+ */
+export interface WidgetDefinition {
+    type: FieldType;
+    label: string;
+    category: 'input' | 'display';
+    icon?: ReactNode;
+    RuntimeView: ComponentType<WidgetRuntimeProps>;
+    DesignView: ComponentType<WidgetDesignProps>;
+    ConfigView: ComponentType<WidgetConfigProps>;
+}

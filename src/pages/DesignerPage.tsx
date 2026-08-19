@@ -7,18 +7,17 @@ import { useEffect, useState } from 'react'
 import { getFormDetail, updateForm } from '../api'
 import type { LayoutSchema } from '../types/index'
 import { message } from 'antd'
-
-
+import type { ResponseData } from '@zdy-oa/utils'
 
 export function DesignerPage() {
-  const { formId } = useParams()
+  const { formId = '' } = useParams()
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState<boolean>(true);
   const [schema, setSchema] = useState<LayoutSchema>()
    const navigate = useNavigate()
 
    const handleSave = (schema: LayoutSchema) => {
-    updateForm(formId || '', { layout: schema }).then((res) => {
+    updateForm(formId || '', { layout: schema }).then((res: ResponseData) => {
       console.log(res);
       if (res.code === 200) {
         messageApi.open({
@@ -35,14 +34,14 @@ export function DesignerPage() {
       setLoading(false)
       return
     }
-    getFormDetail(formId).then((res) => {
+    getFormDetail(formId).then((res: ResponseData) => {
       console.log(res)
       if (res.code === 200) {
         // 后端返回的 FormSchema.layout 就是 LayoutSchema
         setSchema(res.data?.layout as LayoutSchema)
       }
       setLoading(false)
-    }).catch((err) => {
+    }).catch((err: ResponseData) => {
       console.error('getFormDetail error:', err?.code, err?.message)
       setLoading(false)
     })

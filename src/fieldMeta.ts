@@ -11,7 +11,7 @@ export function listWidgets(): WidgetDefinition[] {
 
 /** 按类型获取 widget 定义 */
 export function findWidget(type: FieldType): WidgetDefinition | undefined {
-  return getAllWidgets().find((w) => w.type === type)
+  return getAllWidgets().find((w: WidgetDefinition) => w.type === type)
 }
 
 /** 给定字段类型，返回默认 label 文本 */

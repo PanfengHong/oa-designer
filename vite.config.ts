@@ -6,12 +6,11 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     react(),
-    dts({ rollupTypes: true, tsconfigPath: './tsconfig.build.json' }),
+    dts({ tsconfigPath: './tsconfig.build.json' }),
   ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
-      '@zdy-oa/utils': resolve(__dirname, '../oa-utils/src/index.ts'),
     },
   },
   build: {
@@ -31,6 +30,7 @@ export default defineConfig({
         'antd',
         '@ant-design/icons',
         '@zdy-oa/form',
+        '@zdy-oa/utils',
       ],
     },
   },

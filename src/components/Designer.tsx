@@ -113,7 +113,7 @@ export function Designer({ formId, schema: initialSchema, onChange, onSave }: De
           <div className="oa-designer__preview">
             <FormRenderer
               schema={{
-                id: schema.id,
+                id: formId,
                 name: schema.name,
                 layout: schema,
                 createdAt: Date.now().toString(),

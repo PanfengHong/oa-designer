@@ -18,6 +18,10 @@
     "build": "tsc -p tsconfig.build.json && vite build",
     "lint": "oxlint"
   },
+  "dependencies": {
+    "@zdy-oa/utils": "file:../oa-utils",
+    "@zdy-oa/form": "file:../oa-form"
+  },
   "peerDependencies": {
     "@ant-design/icons": "^6.0.0",
     "@zdy-oa/form": "file:../oa-form",
