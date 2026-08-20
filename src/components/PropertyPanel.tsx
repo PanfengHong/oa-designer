@@ -32,7 +32,7 @@ export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
                 min={1}
                 max={12}
                 value={field.colSpan}
-                onChange={(v?: number | null) => onChange({ colSpan: typeof v === 'number' ? v : undefined })}
+                onChange={(v: number | null) => onChange({ colSpan: typeof v === 'number' ? v : undefined })}
                 style={{ width: '100%' }}
               />
             </Form.Item>
